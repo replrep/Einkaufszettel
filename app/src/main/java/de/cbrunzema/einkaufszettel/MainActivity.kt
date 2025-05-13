@@ -14,13 +14,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.cbrunzema.einkaufszettel.ui.theme.EinkaufszettelTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -97,8 +97,8 @@ fun RightPanel(items: Set<ShoppingItem>, onEvent: (UiEvent) -> Unit) {
 fun MainView(modifier: Modifier = Modifier) {
     val leftScrollState = rememberScrollState()
     val rightScrollState = rememberScrollState()
-    val einkaufszettelViewModel = remember { EinkaufszettelViewModel() }
-    val items by einkaufszettelViewModel.items.collectAsState()
+    val einkaufszettelViewModel: EinkaufszettelViewModel = viewModel()
+    val items by einkaufszettelViewModel.items.collectAsStateWithLifecycle()
 
     Row(
         modifier
