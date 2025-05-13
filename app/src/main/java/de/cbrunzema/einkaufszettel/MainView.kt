@@ -1,0 +1,72 @@
+package de.cbrunzema.einkaufszettel
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+val fontSize = 30.sp
+val lineHeight = 54.sp
+val padding = 10.dp
+
+@Composable
+fun MainView(modifier: Modifier = Modifier) {
+    val leftScrollState = rememberScrollState()
+    val rightScrollState = rememberScrollState()
+    val mainViewModel: MainViewModel = viewModel()
+    val items by mainViewModel.items.collectAsStateWithLifecycle()
+
+    Row(
+        modifier
+            .fillMaxSize()
+            .padding(horizontal = padding)
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1.0f)
+                .verticalScroll(leftScrollState)
+        ) {
+            LeftPanel(items, mainViewModel::onEvent)
+        }
+        Column(
+            modifier = Modifier
+                .weight(1.0f)
+                .verticalScroll(rightScrollState)
+        ) {
+            RightPanel(items, mainViewModel::onEvent)
+        }
+    }
+}
+
+@Composable
+fun LeftPanel(items: Set<ShoppingItem>, onEvent: (UiEvent) -> Unit) {
+    for (item in items.filter { !it.selected }.sortedBy { it.label }) {
+        Text(
+            item.label,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+            modifier = Modifier.clickable { onEvent(UiEvent.Select(item)) })
+    }
+}
+
+@Composable
+fun RightPanel(items: Set<ShoppingItem>, onEvent: (UiEvent) -> Unit) {
+    for (item in items.filter { it.selected }.sortedBy { it.label }) {
+        Text(
+            item.label,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+            modifier = Modifier.clickable { onEvent(UiEvent.Unselect(item)) })
+    }
+}
