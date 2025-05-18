@@ -1,11 +1,22 @@
 package de.cbrunzema.einkaufszettel
 
-data class ShoppingItem(val label: String, val selected: Boolean, val singleUse: Boolean)
+enum class Level { A, B }
 
-val itemStoreDefault: Set<ShoppingItem> =
-    (1..5).map { ShoppingItem("name $it", false, false) }.toSet()
+data class ShoppingItem(
+    val label: String, val level: Level, val selected: Boolean, val singleUse: Boolean
+)
+
+val itemStoreDefault: Set<ShoppingItem> = (1..10).map {
+    if (it < 5) {
+        ShoppingItem("nameA $it", Level.A, false, false)
+    } else {
+        ShoppingItem("nameB $it", Level.B, false, false)
+    }
+}.toSet()
 
 sealed interface UiEvent {
     data class Select(val item: ShoppingItem) : UiEvent
     data class Unselect(val item: ShoppingItem) : UiEvent
+    object LevelA : UiEvent
+    object LevelB : UiEvent
 }
