@@ -30,4 +30,8 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    fun addItem(item: ShoppingItem) {
+        _items.update { it.plus(item) }
+    }
 }

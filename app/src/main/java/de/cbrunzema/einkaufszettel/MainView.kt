@@ -19,6 +19,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +38,8 @@ fun MainView(modifier: Modifier = Modifier) {
     val mainViewModel: MainViewModel = viewModel()
     val items by mainViewModel.items.collectAsStateWithLifecycle()
     val level by mainViewModel.level
+
+    val openCreateDialog = remember { mutableStateOf(false) }
 
     Column(
         modifier
@@ -59,7 +63,7 @@ fun MainView(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1.0f)
             ) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    IconButton(onClick = { mainViewModel.onEvent(UiEvent.LevelA) }) {
+                    IconButton(onClick = { openCreateDialog.value = true }) {
                         Icon(Icons.Default.Add, "TODO")
                     }
                     IconButton(onClick = { mainViewModel.onEvent(UiEvent.LevelB) }) {
@@ -86,10 +90,23 @@ fun MainView(modifier: Modifier = Modifier) {
             }
         }
     }
+
+    if (openCreateDialog.value) {
+        EditDialog(
+            title = "Create", //TODO
+            item = ShoppingItem("", Level.A, false, false),
+            onDismissRequest = { openCreateDialog.value = false },
+            onConfirmation = {
+                openCreateDialog.value = false
+                mainViewModel.addItem(it)
+            })
+    }
 }
+
 
 @Composable
 fun LeftPanel(items: Set<ShoppingItem>, level: Level, onEvent: (UiEvent) -> Unit) {
+    // TODO caching
     for (item in items.filter { !it.selected && it.level == level }.sortedBy { it.label }) {
         key(item.label) {
             Text(
@@ -103,6 +120,7 @@ fun LeftPanel(items: Set<ShoppingItem>, level: Level, onEvent: (UiEvent) -> Unit
 
 @Composable
 fun RightPanel(items: Set<ShoppingItem>, onEvent: (UiEvent) -> Unit) {
+    // TODO caching
     for (item in items.filter { it.selected }.sortedBy { it.label }) {
         key(item.label) {
             Text(
