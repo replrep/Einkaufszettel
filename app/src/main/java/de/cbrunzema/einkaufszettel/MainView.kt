@@ -122,6 +122,10 @@ fun MainView(modifier: Modifier = Modifier) {
                 mainViewModel.deleteItem(itemForEditDialog.value!!)
                 itemForEditDialog.value = null
                 mainViewModel.addItem(it)
+            },
+            onDeleteRequest = {
+                mainViewModel.deleteItem(itemForEditDialog.value!!)
+                itemForEditDialog.value = null
             })
     }
 }
