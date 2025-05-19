@@ -17,7 +17,11 @@ class MainViewModel : ViewModel() {
     }
 
     fun unselect(item: ShoppingItem) {
-        _items.update { it.minus(item).plus(item.copy(selected = false)) }
+        if (item.singleUse) {
+            deleteItem(item)
+        } else {
+            _items.update { it.minus(item).plus(item.copy(selected = false)) }
+        }
     }
 
     fun setLevel(newLevel: Level) {

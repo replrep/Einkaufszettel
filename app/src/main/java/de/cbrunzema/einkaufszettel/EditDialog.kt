@@ -57,14 +57,18 @@ fun EditDialog(
                     }
                 }
                 IconButton(onClick = {
-                    onConfirmation(
-                        ShoppingItem(
-                            label = label.value,
-                            level = level.value,
-                            singleUse = singleUse.value,
-                            selected = false
+                    if (label.value.isEmpty()) {
+                        onDismissRequest()
+                    } else {
+                        onConfirmation(
+                            ShoppingItem(
+                                label = label.value,
+                                level = level.value,
+                                singleUse = singleUse.value,
+                                selected = singleUse.value // always select single use items immediately
+                            )
                         )
-                    )
+                    }
                 }, modifier = Modifier.weight(1.0f)) {
                     Icon(Icons.Default.Done, "TODO")
                 }
