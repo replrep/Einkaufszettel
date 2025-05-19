@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,13 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-
-val fontSize = 30.sp
-val lineHeight = 54.sp
-val padding = 10.dp
 
 @Composable
 fun MainView(modifier: Modifier = Modifier) {
@@ -47,7 +43,7 @@ fun MainView(modifier: Modifier = Modifier) {
     Column(
         modifier
             .fillMaxSize()
-            .padding(horizontal = padding)
+            .padding(horizontal = 10.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(
@@ -144,8 +140,8 @@ fun LeftPanel(
         key(item.label) {
             Text(
                 item.label,
-                fontSize = fontSize,
-                lineHeight = lineHeight,
+                style = MaterialTheme.typography.titleLarge,
+                lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(2),
                 modifier = Modifier.combinedClickable(
                     onClick = { onClick(item) },
                     onLongClick = { onLongClick(item) })
@@ -163,13 +159,13 @@ fun RightPanel(
         key(item.label) {
             Text(
                 item.label,
-                fontSize = fontSize,
+                style = MaterialTheme.typography.titleLarge,
+                lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(2),
                 fontStyle = if (item.singleUse) {
                     FontStyle.Italic
                 } else {
                     FontStyle.Normal
                 },
-                lineHeight = lineHeight,
                 modifier = Modifier.combinedClickable(
                     onClick = { onClick(item) },
                     onLongClick = { onLongClick(item) })
