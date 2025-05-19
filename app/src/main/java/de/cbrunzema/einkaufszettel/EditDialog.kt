@@ -15,9 +15,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
@@ -29,6 +32,7 @@ fun EditDialog(
     onDeleteRequest: () -> Unit = {},
     onConfirmation: (ShoppingItem) -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
     val needsDeleteButton = remember { !item.label.isEmpty() }
     val label = remember { mutableStateOf(item.label) }
     val level = remember { mutableStateOf(item.level) }
@@ -81,6 +85,7 @@ fun EditDialog(
                     onValueChange = { label.value = it },
                     label = { Text("Label") }, //TODO
                     singleLine = true,
+                    modifier = Modifier.focusRequester(focusRequester)
                 )
             }
             Row {
@@ -97,4 +102,5 @@ fun EditDialog(
             }
         }
     }
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 }
