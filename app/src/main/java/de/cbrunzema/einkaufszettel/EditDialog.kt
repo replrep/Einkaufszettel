@@ -61,12 +61,12 @@ fun EditDialog(
                     }
                 }
                 IconButton(onClick = {
-                    if (label.value.isEmpty()) {
+                    if (label.value.isBlank()) {
                         onDismissRequest()
                     } else {
                         onConfirmation(
                             ShoppingItem(
-                                label = label.value,
+                                label = label.value.trim(),
                                 level = level.value,
                                 singleUse = singleUse.value,
                                 selected = singleUse.value // always select single use items immediately
