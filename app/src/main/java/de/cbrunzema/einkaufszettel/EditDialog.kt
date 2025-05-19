@@ -3,6 +3,8 @@ package de.cbrunzema.einkaufszettel
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -21,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
@@ -37,6 +41,21 @@ fun EditDialog(
     val label = remember { mutableStateOf(item.label) }
     val level = remember { mutableStateOf(item.level) }
     val singleUse = remember { mutableStateOf(item.singleUse) }
+
+    fun confirm() {
+        if (label.value.isBlank()) {
+            onDismissRequest()
+        } else {
+            onConfirmation(
+                ShoppingItem(
+                    label = label.value.trim(),
+                    level = level.value,
+                    singleUse = singleUse.value,
+                    selected = singleUse.value // always select single use items immediately
+                )
+            )
+        }
+    }
 
     Dialog(
         onDismissRequest = { onDismissRequest() }) {
@@ -61,18 +80,7 @@ fun EditDialog(
                     }
                 }
                 IconButton(onClick = {
-                    if (label.value.isBlank()) {
-                        onDismissRequest()
-                    } else {
-                        onConfirmation(
-                            ShoppingItem(
-                                label = label.value.trim(),
-                                level = level.value,
-                                singleUse = singleUse.value,
-                                selected = singleUse.value // always select single use items immediately
-                            )
-                        )
-                    }
+                    confirm()
                 }, modifier = Modifier.weight(1.0f)) {
                     Icon(Icons.Default.Done, "TODO")
                 }
@@ -85,7 +93,11 @@ fun EditDialog(
                     onValueChange = { label.value = it },
                     label = { Text("Label") }, //TODO
                     singleLine = true,
-                    modifier = Modifier.focusRequester(focusRequester)
+                    modifier = Modifier.focusRequester(focusRequester),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text, imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = { confirm() })
                 )
             }
             Row {
