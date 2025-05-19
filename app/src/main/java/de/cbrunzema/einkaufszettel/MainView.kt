@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,21 +91,25 @@ fun MainView(modifier: Modifier = Modifier) {
 @Composable
 fun LeftPanel(items: Set<ShoppingItem>, level: Level, onEvent: (UiEvent) -> Unit) {
     for (item in items.filter { !it.selected && it.level == level }.sortedBy { it.label }) {
-        Text(
-            item.label,
-            fontSize = fontSize,
-            lineHeight = lineHeight,
-            modifier = Modifier.clickable { onEvent(UiEvent.Select(item)) })
+        key(item.label) {
+            Text(
+                item.label,
+                fontSize = fontSize,
+                lineHeight = lineHeight,
+                modifier = Modifier.clickable { onEvent(UiEvent.Select(item)) })
+        }
     }
 }
 
 @Composable
 fun RightPanel(items: Set<ShoppingItem>, onEvent: (UiEvent) -> Unit) {
     for (item in items.filter { it.selected }.sortedBy { it.label }) {
-        Text(
-            item.label,
-            fontSize = fontSize,
-            lineHeight = lineHeight,
-            modifier = Modifier.clickable { onEvent(UiEvent.Unselect(item)) })
+        key(item.label) {
+            Text(
+                item.label,
+                fontSize = fontSize,
+                lineHeight = lineHeight,
+                modifier = Modifier.clickable { onEvent(UiEvent.Unselect(item)) })
+        }
     }
 }
