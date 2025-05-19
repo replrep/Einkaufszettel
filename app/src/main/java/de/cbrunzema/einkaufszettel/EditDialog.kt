@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -63,7 +65,6 @@ fun EditDialog(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
         ) {
-            Text(title)
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
@@ -85,6 +86,8 @@ fun EditDialog(
                     Icon(Icons.Default.Done, "TODO")
                 }
             }
+            Text(title, style = MaterialTheme.typography.titleLarge)
+            Text("")
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
@@ -100,7 +103,7 @@ fun EditDialog(
                     keyboardActions = KeyboardActions(onDone = { confirm() })
                 )
             }
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Level A") //TODO
                 RadioButton(
                     selected = (level.value == Level.A), onClick = { level.value = Level.A })
@@ -108,7 +111,7 @@ fun EditDialog(
                 RadioButton(
                     selected = (level.value == Level.B), onClick = { level.value = Level.B })
             }
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Single use") //TODO
                 Checkbox(checked = singleUse.value, onCheckedChange = { singleUse.value = it })
             }
