@@ -23,6 +23,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -163,6 +164,11 @@ fun RightPanel(
             Text(
                 item.label,
                 fontSize = fontSize,
+                fontStyle = if (item.singleUse) {
+                    FontStyle.Italic
+                } else {
+                    FontStyle.Normal
+                },
                 lineHeight = lineHeight,
                 modifier = Modifier.combinedClickable(
                     onClick = { onClick(item) },
