@@ -11,27 +11,24 @@ class MainViewModel : ViewModel() {
     val items = _items.asStateFlow()
     val level = mutableStateOf(Level.A)
 
-    fun onEvent(event: UiEvent) {
-        when (event) {
-            is UiEvent.Select -> {
-                _items.update { it.minus(event.item).plus(event.item.copy(selected = true)) }
-            }
 
-            is UiEvent.Unselect -> {
-                _items.update { it.minus(event.item).plus(event.item.copy(selected = false)) }
-            }
+    fun select(item: ShoppingItem) {
+        _items.update { it.minus(item).plus(item.copy(selected = true)) }
+    }
 
-            is UiEvent.LevelA -> {
-                level.value = Level.A
-            }
+    fun unselect(item: ShoppingItem) {
+        _items.update { it.minus(item).plus(item.copy(selected = false)) }
+    }
 
-            is UiEvent.LevelB -> {
-                level.value = Level.B
-            }
-        }
+    fun setLevel(newLevel: Level) {
+        level.value = newLevel
     }
 
     fun addItem(item: ShoppingItem) {
         _items.update { it.plus(item) }
+    }
+
+    fun deleteItem(item: ShoppingItem) {
+        _items.update { it.minus(item) }
     }
 }

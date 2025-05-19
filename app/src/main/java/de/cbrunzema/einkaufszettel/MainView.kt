@@ -1,6 +1,7 @@
 package de.cbrunzema.einkaufszettel
 
-import androidx.compose.foundation.clickable
+import android.util.Log
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +41,7 @@ fun MainView(modifier: Modifier = Modifier) {
     val level by mainViewModel.level
 
     val openCreateDialog = remember { mutableStateOf(false) }
+    val itemForEditDialog = remember { mutableStateOf<ShoppingItem?>(null) }
 
     Column(
         modifier
@@ -51,10 +53,10 @@ fun MainView(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1.0f)
             ) {
                 Row {
-                    TextButton(onClick = { mainViewModel.onEvent(UiEvent.LevelA) }) {
+                    TextButton(onClick = { mainViewModel.setLevel(Level.A) }) {
                         Text(Level.A.name)
                     }
-                    TextButton(onClick = { mainViewModel.onEvent(UiEvent.LevelB) }) {
+                    TextButton(onClick = { mainViewModel.setLevel(Level.B) }) {
                         Text(Level.B.name)
                     }
                 }
@@ -66,7 +68,7 @@ fun MainView(modifier: Modifier = Modifier) {
                     IconButton(onClick = { openCreateDialog.value = true }) {
                         Icon(Icons.Default.Add, "TODO")
                     }
-                    IconButton(onClick = { mainViewModel.onEvent(UiEvent.LevelB) }) {
+                    IconButton(onClick = { Log.e("AAA", "Settings clicked") }) {
                         Icon(Icons.Default.Settings, "TODO")
                     }
                 }
@@ -79,14 +81,23 @@ fun MainView(modifier: Modifier = Modifier) {
                     .weight(1.0f)
                     .verticalScroll(leftScrollState)
             ) {
-                LeftPanel(items, level, mainViewModel::onEvent)
+                LeftPanel(
+                    items = items,
+                    level = level,
+                    onClick = { mainViewModel.select(it) },
+                    onLongClick = {
+                        itemForEditDialog.value = it
+                    })
             }
             Column(
                 modifier = Modifier
                     .weight(1.0f)
                     .verticalScroll(rightScrollState)
             ) {
-                RightPanel(items, mainViewModel::onEvent)
+                RightPanel(items = items, onClick = { mainViewModel.unselect(it) }, onLongClick = {
+                    itemForEditDialog.value = it
+                })
+
             }
         }
     }
@@ -101,11 +112,28 @@ fun MainView(modifier: Modifier = Modifier) {
                 mainViewModel.addItem(it)
             })
     }
+
+    if (itemForEditDialog.value != null) {
+        EditDialog(
+            title = "Edit", //TODO
+            item = itemForEditDialog.value!!,
+            onDismissRequest = { itemForEditDialog.value = null },
+            onConfirmation = {
+                mainViewModel.deleteItem(itemForEditDialog.value!!)
+                itemForEditDialog.value = null
+                mainViewModel.addItem(it)
+            })
+    }
 }
 
 
 @Composable
-fun LeftPanel(items: Set<ShoppingItem>, level: Level, onEvent: (UiEvent) -> Unit) {
+fun LeftPanel(
+    items: Set<ShoppingItem>,
+    level: Level,
+    onClick: (ShoppingItem) -> Unit,
+    onLongClick: (ShoppingItem) -> Unit
+) {
     // TODO caching
     for (item in items.filter { !it.selected && it.level == level }.sortedBy { it.label }) {
         key(item.label) {
@@ -113,13 +141,18 @@ fun LeftPanel(items: Set<ShoppingItem>, level: Level, onEvent: (UiEvent) -> Unit
                 item.label,
                 fontSize = fontSize,
                 lineHeight = lineHeight,
-                modifier = Modifier.clickable { onEvent(UiEvent.Select(item)) })
+                modifier = Modifier.combinedClickable(
+                    onClick = { onClick(item) },
+                    onLongClick = { onLongClick(item) })
+            )
         }
     }
 }
 
 @Composable
-fun RightPanel(items: Set<ShoppingItem>, onEvent: (UiEvent) -> Unit) {
+fun RightPanel(
+    items: Set<ShoppingItem>, onClick: (ShoppingItem) -> Unit, onLongClick: (ShoppingItem) -> Unit
+) {
     // TODO caching
     for (item in items.filter { it.selected }.sortedBy { it.label }) {
         key(item.label) {
@@ -127,7 +160,10 @@ fun RightPanel(items: Set<ShoppingItem>, onEvent: (UiEvent) -> Unit) {
                 item.label,
                 fontSize = fontSize,
                 lineHeight = lineHeight,
-                modifier = Modifier.clickable { onEvent(UiEvent.Unselect(item)) })
+                modifier = Modifier.combinedClickable(
+                    onClick = { onClick(item) },
+                    onLongClick = { onLongClick(item) })
+            )
         }
     }
 }

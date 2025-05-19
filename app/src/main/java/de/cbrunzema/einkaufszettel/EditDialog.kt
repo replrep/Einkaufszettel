@@ -31,8 +31,8 @@ fun EditDialog(
 ) {
     val needsDeleteButton = remember { !item.label.isEmpty() }
     val label = remember { mutableStateOf(item.label) }
-    val level = remember { mutableStateOf(Level.A) }
-    val singleUse = remember { mutableStateOf(false) }
+    val level = remember { mutableStateOf(item.level) }
+    val singleUse = remember { mutableStateOf(item.singleUse) }
 
     Dialog(
         onDismissRequest = { onDismissRequest() }) {
