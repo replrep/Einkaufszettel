@@ -13,10 +13,3 @@ val itemStoreDefault: Set<ShoppingItem> = (1..10).map {
         ShoppingItem("nameB $it", Level.B, false, false)
     }
 }.toSet()
-
-sealed interface UiEvent {
-    data class Select(val item: ShoppingItem) : UiEvent
-    data class Unselect(val item: ShoppingItem) : UiEvent
-    object LevelA : UiEvent
-    object LevelB : UiEvent
-}
