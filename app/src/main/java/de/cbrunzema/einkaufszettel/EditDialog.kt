@@ -1,7 +1,9 @@
 package de.cbrunzema.einkaufszettel
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -86,34 +88,37 @@ fun EditDialog(
                     Icon(Icons.Default.Done, "TODO")
                 }
             }
-            Text(title, style = MaterialTheme.typography.titleLarge)
-            Text("")
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                OutlinedTextField(
-                    value = label.value,
-                    onValueChange = { label.value = it },
-                    label = { Text("Label") }, //TODO
-                    singleLine = true,
-                    modifier = Modifier.focusRequester(focusRequester),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text, imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(onDone = { confirm() })
-                )
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Level A") //TODO
-                RadioButton(
-                    selected = (level.value == Level.A), onClick = { level.value = Level.A })
-                Text("Level B") //TODO
-                RadioButton(
-                    selected = (level.value == Level.B), onClick = { level.value = Level.B })
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Single use") //TODO
-                Checkbox(checked = singleUse.value, onCheckedChange = { singleUse.value = it })
+
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text(title, style = MaterialTheme.typography.titleLarge)
+                Text("")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    OutlinedTextField(
+                        value = label.value,
+                        onValueChange = { label.value = it },
+                        label = { Text("Label") }, //TODO
+                        singleLine = true,
+                        modifier = Modifier.focusRequester(focusRequester),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text, imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onDone = { confirm() })
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Level A") //TODO
+                    RadioButton(
+                        selected = (level.value == Level.A), onClick = { level.value = Level.A })
+                    Text("Level B") //TODO
+                    RadioButton(
+                        selected = (level.value == Level.B), onClick = { level.value = Level.B })
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Single use") //TODO
+                    Checkbox(checked = singleUse.value, onCheckedChange = { singleUse.value = it })
+                }
             }
         }
     }
