@@ -43,7 +43,7 @@ fun MainView(modifier: Modifier = Modifier) {
     val leftScrollState = rememberScrollState()
     val rightScrollState = rememberScrollState()
     val mainViewModel: MainViewModel = viewModel()
-    val items by mainViewModel.items.collectAsStateWithLifecycle()
+    val items by mainViewModel.items
     val level by mainViewModel.level
 
     val openCreateDialog = remember { mutableStateOf(false) }

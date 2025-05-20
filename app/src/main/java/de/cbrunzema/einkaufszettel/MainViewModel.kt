@@ -2,25 +2,20 @@ package de.cbrunzema.einkaufszettel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
 class MainViewModel : ViewModel() {
-    private val _items = MutableStateFlow(itemStoreDefault)
-    val items = _items.asStateFlow()
+    val items = mutableStateOf(itemStoreDefault)
     val level = mutableStateOf(Level.A)
 
-
     fun select(item: ShoppingItem) {
-        _items.update { it.minus(item).plus(item.copy(selected = true)) }
+        items.value = items.value.minus(item).plus(item.copy(selected = true))
     }
 
     fun unselect(item: ShoppingItem) {
         if (item.singleUse) {
             deleteItem(item)
         } else {
-            _items.update { it.minus(item).plus(item.copy(selected = false)) }
+            items.value = items.value.minus(item).plus(item.copy(selected = false))
         }
     }
 
@@ -29,10 +24,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun addItem(item: ShoppingItem) {
-        _items.update { it.filterNot { x -> x.label == item.label }.plus(item).toSet() }
+        items.value = items.value.filterNot { x -> x.label == item.label }.plus(item).toSet()
     }
 
     fun deleteItem(item: ShoppingItem) {
-        _items.update { it.minus(item) }
+        items.value = items.value.minus(item)
     }
 }
