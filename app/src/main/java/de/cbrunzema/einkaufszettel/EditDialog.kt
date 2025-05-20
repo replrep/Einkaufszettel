@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -76,19 +77,19 @@ fun EditDialog(
                 IconButton(onClick = {
                     onDismissRequest()
                 }, modifier = Modifier.weight(1.0f)) {
-                    Icon(Icons.Default.Close, "TODO")
+                    Icon(Icons.Default.Close, stringResource(R.string.cancel))
                 }
                 if (needsDeleteButton) {
                     IconButton(
                         onClick = { onDeleteRequest() }, modifier = Modifier.weight(1.0f)
                     ) {
-                        Icon(Icons.Default.Delete, "TODO")
+                        Icon(Icons.Default.Delete, stringResource(R.string.delete))
                     }
                 }
                 IconButton(onClick = {
                     confirm()
                 }, modifier = Modifier.weight(1.0f)) {
-                    Icon(Icons.Default.Done, "TODO")
+                    Icon(Icons.Default.Done, stringResource(R.string.done))
                 }
             }
             HorizontalDivider()
@@ -102,7 +103,7 @@ fun EditDialog(
                     OutlinedTextField(
                         value = label.value,
                         onValueChange = { label.value = it },
-                        label = { Text("Label") }, //TODO
+                        label = { Text(stringResource(R.string.label)) },
                         singleLine = true,
                         modifier = Modifier.focusRequester(focusRequester),
                         keyboardOptions = KeyboardOptions(
@@ -112,15 +113,15 @@ fun EditDialog(
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Level A") //TODO
+                    Text(stringResource(R.string.level_a))
                     RadioButton(
                         selected = (level.value == Level.A), onClick = { level.value = Level.A })
-                    Text("Level B") //TODO
+                    Text(stringResource(R.string.level_b))
                     RadioButton(
                         selected = (level.value == Level.B), onClick = { level.value = Level.B })
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Single use") //TODO
+                    Text(stringResource(R.string.single_use))
                     Checkbox(checked = singleUse.value, onCheckedChange = { singleUse.value = it })
                 }
             }

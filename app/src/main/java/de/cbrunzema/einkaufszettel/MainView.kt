@@ -24,6 +24,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -63,10 +64,10 @@ fun MainView(modifier: Modifier = Modifier) {
             ) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     IconButton(onClick = { openCreateDialog.value = true }) {
-                        Icon(Icons.Default.Add, "TODO")
+                        Icon(Icons.Default.Add, stringResource(R.string.add))
                     }
                     IconButton(onClick = { Log.e("AAA", "Settings clicked") }) {
-                        Icon(Icons.Default.Settings, "TODO")
+                        Icon(Icons.Default.Settings, stringResource(R.string.settings))
                     }
                 }
             }
@@ -101,7 +102,7 @@ fun MainView(modifier: Modifier = Modifier) {
 
     if (openCreateDialog.value) {
         EditDialog(
-            title = "Create", //TODO
+            title = stringResource(R.string.create),
             item = ShoppingItem("", Level.A, false, false),
             onDismissRequest = { openCreateDialog.value = false },
             onConfirmation = {
@@ -112,7 +113,7 @@ fun MainView(modifier: Modifier = Modifier) {
 
     if (itemForEditDialog.value != null) {
         EditDialog(
-            title = "Edit", //TODO
+            title = stringResource(R.string.edit),
             item = itemForEditDialog.value!!,
             onDismissRequest = { itemForEditDialog.value = null },
             onConfirmation = {
