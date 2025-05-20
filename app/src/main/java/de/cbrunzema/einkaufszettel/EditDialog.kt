@@ -24,8 +24,10 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -46,20 +48,20 @@ fun EditDialog(
 ) {
     val focusRequester = remember { FocusRequester() }
     val needsDeleteButton = remember { !item.label.isEmpty() }
-    val label = remember { mutableStateOf(item.label) }
-    val level = remember { mutableStateOf(item.level) }
-    val singleUse = remember { mutableStateOf(item.singleUse) }
+    var label by remember { mutableStateOf(item.label) }
+    var level by remember { mutableStateOf(item.level) }
+    var singleUse by remember { mutableStateOf(item.singleUse) }
 
     fun confirm() {
-        if (label.value.isBlank()) {
+        if (label.isBlank()) {
             onDismissRequest()
         } else {
             onConfirmation(
                 ShoppingItem(
-                    label = label.value.trim(),
-                    level = level.value,
-                    singleUse = singleUse.value,
-                    selected = singleUse.value // always select single use items immediately
+                    label = label.trim(),
+                    level = level,
+                    singleUse = singleUse,
+                    selected = singleUse // select single use items immediately
                 )
             )
         }
@@ -101,8 +103,8 @@ fun EditDialog(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     OutlinedTextField(
-                        value = label.value,
-                        onValueChange = { label.value = it },
+                        value = label,
+                        onValueChange = { label = it },
                         label = { Text(stringResource(R.string.label)) },
                         singleLine = true,
                         modifier = Modifier.focusRequester(focusRequester),
@@ -115,14 +117,14 @@ fun EditDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.level_a))
                     RadioButton(
-                        selected = (level.value == Level.A), onClick = { level.value = Level.A })
+                        selected = (level == Level.A), onClick = { level = Level.A })
                     Text(stringResource(R.string.level_b))
                     RadioButton(
-                        selected = (level.value == Level.B), onClick = { level.value = Level.B })
+                        selected = (level == Level.B), onClick = { level = Level.B })
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.single_use))
-                    Checkbox(checked = singleUse.value, onCheckedChange = { singleUse.value = it })
+                    Checkbox(checked = singleUse, onCheckedChange = { singleUse = it })
                 }
             }
         }

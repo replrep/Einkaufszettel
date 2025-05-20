@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,8 +46,8 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
     val items by mainViewModel.items
     val level by mainViewModel.level
 
-    val openCreateDialog = remember { mutableStateOf(false) }
-    val itemForEditDialog = remember { mutableStateOf<ShoppingItem?>(null) }
+    var openCreateDialog by remember { mutableStateOf(false) }
+    var itemForEditDialog by remember { mutableStateOf<ShoppingItem?>(null) }
 
     Column(
         modifier
@@ -81,7 +82,7 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
                 modifier = Modifier.weight(1.0f)
             ) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    IconButton(onClick = { openCreateDialog.value = true }) {
+                    IconButton(onClick = { openCreateDialog = true }) {
                         Icon(Icons.Default.Add, stringResource(R.string.add))
                     }
                     IconButton(onClick = { Log.e("AAA", "Settings clicked") }) {
@@ -102,7 +103,7 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
                     level = level,
                     onClick = { mainViewModel.select(it) },
                     onLongClick = {
-                        itemForEditDialog.value = it
+                        itemForEditDialog = it
                     })
             }
             Column(
@@ -111,40 +112,39 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
                     .verticalScroll(rightScrollState)
             ) {
                 RightPanel(items = items, onClick = { mainViewModel.unselect(it) }, onLongClick = {
-                    itemForEditDialog.value = it
+                    itemForEditDialog = it
                 })
-
             }
         }
     }
 
-    if (openCreateDialog.value) {
+    if (openCreateDialog) {
         EditDialog(
             title = stringResource(R.string.create),
             item = ShoppingItem("", level, false, false),
-            onDismissRequest = { openCreateDialog.value = false },
+            onDismissRequest = { openCreateDialog = false },
             onConfirmation = {
-                openCreateDialog.value = false
+                openCreateDialog = false
                 mainViewModel.addItem(it)
                 snackbarLauncher(it.label + " " + Einkaufszettel.res.getString(R.string.created))
             })
     }
 
-    if (itemForEditDialog.value != null) {
+    if (itemForEditDialog != null) {
         EditDialog(
             title = stringResource(R.string.edit),
-            item = itemForEditDialog.value!!,
-            onDismissRequest = { itemForEditDialog.value = null },
+            item = itemForEditDialog!!,
+            onDismissRequest = { itemForEditDialog = null },
             onConfirmation = {
-                mainViewModel.deleteItem(itemForEditDialog.value!!)
-                itemForEditDialog.value = null
+                mainViewModel.deleteItem(itemForEditDialog!!)
+                itemForEditDialog = null
                 mainViewModel.addItem(it)
                 snackbarLauncher(it.label + " " + Einkaufszettel.res.getString(R.string.updated))
             },
             onDeleteRequest = {
-                val deletedLabel = itemForEditDialog.value!!.label
-                mainViewModel.deleteItem(itemForEditDialog.value!!)
-                itemForEditDialog.value = null
+                val deletedLabel = itemForEditDialog!!.label
+                mainViewModel.deleteItem(itemForEditDialog!!)
+                itemForEditDialog = null
                 snackbarLauncher(deletedLabel + " " + Einkaufszettel.res.getString(R.string.deleted))
             })
     }
