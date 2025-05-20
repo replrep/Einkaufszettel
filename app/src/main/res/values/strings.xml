@@ -11,4 +11,7 @@
     <string name="settings">Settings</string>
     <string name="create">Create</string>
     <string name="edit">Edit</string>
+    <string name="created">created</string>
+    <string name="deleted">deleted</string>
+    <string name="updated">updated</string>
 </resources>

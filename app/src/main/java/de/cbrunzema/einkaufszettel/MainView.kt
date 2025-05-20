@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MainView(modifier: Modifier = Modifier) {
+fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) {
     val leftScrollState = rememberScrollState()
     val rightScrollState = rememberScrollState()
     val mainViewModel: MainViewModel = viewModel()
@@ -126,6 +126,7 @@ fun MainView(modifier: Modifier = Modifier) {
             onConfirmation = {
                 openCreateDialog.value = false
                 mainViewModel.addItem(it)
+                snackbarLauncher(it.label + " " + Einkaufszettel.res.getString(R.string.created))
             })
     }
 
@@ -138,10 +139,13 @@ fun MainView(modifier: Modifier = Modifier) {
                 mainViewModel.deleteItem(itemForEditDialog.value!!)
                 itemForEditDialog.value = null
                 mainViewModel.addItem(it)
+                snackbarLauncher(it.label + " " + Einkaufszettel.res.getString(R.string.updated))
             },
             onDeleteRequest = {
+                val deletedLabel = itemForEditDialog.value!!.label
                 mainViewModel.deleteItem(itemForEditDialog.value!!)
                 itemForEditDialog.value = null
+                snackbarLauncher(deletedLabel + " " + Einkaufszettel.res.getString(R.string.deleted))
             })
     }
 }
