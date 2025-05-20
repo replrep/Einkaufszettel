@@ -121,7 +121,7 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
     if (openCreateDialog.value) {
         EditDialog(
             title = stringResource(R.string.create),
-            item = ShoppingItem("", Level.A, false, false),
+            item = ShoppingItem("", level, false, false),
             onDismissRequest = { openCreateDialog.value = false },
             onConfirmation = {
                 openCreateDialog.value = false
@@ -149,7 +149,6 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
             })
     }
 }
-
 
 @Composable
 fun LeftPanel(
