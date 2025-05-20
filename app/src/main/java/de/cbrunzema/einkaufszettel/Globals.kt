@@ -1,7 +1,12 @@
 package de.cbrunzema.einkaufszettel
 
+import kotlinx.serialization.Serializable
+
+const val storageFileName = "einkaufszettel.json"
+
 enum class Level { A, B }
 
+@Serializable
 data class ShoppingItem(
     val label: String, val level: Level, val singleUse: Boolean, val selected: Boolean
 )
