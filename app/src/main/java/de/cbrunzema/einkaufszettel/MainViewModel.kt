@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun addItem(item: ShoppingItem) {
-        _items.update { it.plus(item) }
+        _items.update { it.filterNot { x -> x.label == item.label }.plus(item).toSet() }
     }
 
     fun deleteItem(item: ShoppingItem) {
