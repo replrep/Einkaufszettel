@@ -158,8 +158,11 @@ fun LeftPanel(
     onClick: (ShoppingItem) -> Unit,
     onLongClick: (ShoppingItem) -> Unit
 ) {
-    // TODO caching
-    for (item in items.filter { !it.selected && it.level == level }.sortedBy { it.label }) {
+    val cachedItems = remember(items, level) {
+        items.filter { !it.selected && it.level == level }.sortedBy { it.label }
+    }
+
+    for (item in cachedItems) {
         key(item.label) {
             Text(
                 item.label,
@@ -177,8 +180,9 @@ fun LeftPanel(
 fun RightPanel(
     items: Set<ShoppingItem>, onClick: (ShoppingItem) -> Unit, onLongClick: (ShoppingItem) -> Unit
 ) {
-    // TODO caching
-    for (item in items.filter { it.selected }.sortedBy { it.label }) {
+    val cachedItems = remember(items) { items.filter { it.selected }.sortedBy { it.label } }
+
+    for (item in cachedItems) {
         key(item.label) {
             Text(
                 item.label,
