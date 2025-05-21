@@ -13,10 +13,13 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.cbrunzema.einkaufszettel.ui.theme.EinkaufszettelTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,15 +31,26 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = {
                     SnackbarHost(hostState = snackbarHostState)
                 }) { innerPadding ->
-                    MainView(Modifier.padding(innerPadding)) { msg ->
-                        snackbarCoroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = msg, duration = SnackbarDuration.Short
-                            )
-                        }
-                    }
+                    mainViewModel = viewModel()
+                    mainViewModel.load()
+                    MainView(
+                        mainViewModel = mainViewModel,
+                        modifier = Modifier.padding(innerPadding),
+                        snackbarLauncher = { msg ->
+                            snackbarCoroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = msg, duration = SnackbarDuration.Short
+                                )
+                            }
+                        })
                 }
             }
         }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        mainViewModel.save()
     }
 }

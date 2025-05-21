@@ -35,13 +35,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) {
+fun MainView(
+    mainViewModel: MainViewModel, modifier: Modifier, snackbarLauncher: (String) -> Unit
+) {
     val leftScrollState = rememberScrollState()
     val rightScrollState = rememberScrollState()
-    val mainViewModel: MainViewModel = viewModel()
     val items by mainViewModel.items
     val level by mainViewModel.level
 
