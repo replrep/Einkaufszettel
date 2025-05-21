@@ -2,7 +2,6 @@
 
 package de.cbrunzema.einkaufszettel
 
-import android.util.Log
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +46,7 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
     val level by mainViewModel.level
 
     var openCreateDialog by remember { mutableStateOf(false) }
+    var openInfoDialog by remember { mutableStateOf(false) }
     var itemForEditDialog by remember { mutableStateOf<ShoppingItem?>(null) }
 
     Column(
@@ -85,8 +85,8 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
                     IconButton(onClick = { openCreateDialog = true }) {
                         Icon(Icons.Default.Add, stringResource(R.string.add))
                     }
-                    IconButton(onClick = { Log.e("AAA", "Settings clicked") }) {
-                        Icon(Icons.Default.Settings, stringResource(R.string.settings))
+                    IconButton(onClick = { openInfoDialog = true }) {
+                        Icon(Icons.Default.Info, stringResource(R.string.info))
                     }
                 }
             }
@@ -128,6 +128,12 @@ fun MainView(modifier: Modifier = Modifier, snackbarLauncher: (String) -> Unit) 
                 mainViewModel.addItem(it)
                 snackbarLauncher(it.label + " " + Einkaufszettel.res.getString(R.string.created))
             })
+    }
+
+    if (openInfoDialog) {
+        InfoDialog(
+            onDismissRequest = { openInfoDialog = false },
+        )
     }
 
     if (itemForEditDialog != null) {

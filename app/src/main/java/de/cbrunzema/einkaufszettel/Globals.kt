@@ -2,6 +2,8 @@ package de.cbrunzema.einkaufszettel
 
 import kotlinx.serialization.Serializable
 
+const val sourceRepoUrl = "https://github.com/replrep/Einkaufszettel"
+
 const val storageFileName = "einkaufszettel.json"
 
 enum class Level { A, B }
