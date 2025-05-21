@@ -95,7 +95,7 @@ fun InfoDialog(
             Spacer(Modifier.height(8.dp))
             HorizontalDivider()
             Spacer(Modifier.height(8.dp))
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp)) {
                 Text(
                     stringResource(R.string.copyright), style = MaterialTheme.typography.bodyLarge
                 )
