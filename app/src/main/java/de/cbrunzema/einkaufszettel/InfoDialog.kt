@@ -83,7 +83,7 @@ fun InfoDialog(
                     )
                     Row {
                         Text(
-                            stringResource(R.string.check_out_the) + " ",
+                            stringResource(R.string.check_out_the),
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Text(
