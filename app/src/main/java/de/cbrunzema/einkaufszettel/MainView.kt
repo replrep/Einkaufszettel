@@ -172,7 +172,7 @@ fun LeftPanel(
             Text(
                 item.label,
                 style = MaterialTheme.typography.titleLarge,
-                lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(2),
+                lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
                 modifier = Modifier.combinedClickable(
                     onClick = { onClick(item) },
                     onLongClick = { onLongClick(item) })
@@ -192,7 +192,7 @@ fun RightPanel(
             Text(
                 item.label,
                 style = MaterialTheme.typography.titleLarge,
-                lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(2),
+                lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
                 fontStyle = if (item.singleUse) {
                     FontStyle.Italic
                 } else {
