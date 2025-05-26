@@ -8,10 +8,13 @@ the actual shopping list with a single tap. There is also support for
 remembering one-time things that do not need to be registered
 persistently.
 
+The main screen looks like this:
 
- *Please do not try to use it yet, it is still in a pre-alpha
- non-functioning state.*
+![main screen](screenshot-main.png)
 
+If you long-tap an item the edit dialog shows up:
+
+![edit dialog](screenshot-edit.png)
 
 ---
 Copyright (C) 2025 Claus Brunzema <mail@cbrunzema.de>
