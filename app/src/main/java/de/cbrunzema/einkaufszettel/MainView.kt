@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
@@ -40,6 +41,8 @@ import androidx.compose.ui.unit.dp
 fun MainView(
     mainViewModel: MainViewModel, modifier: Modifier, snackbarLauncher: (String) -> Unit
 ) {
+    val ctx = LocalContext.current
+
     val leftScrollState = rememberScrollState()
     val rightScrollState = rememberScrollState()
     val items by mainViewModel.items
@@ -126,7 +129,7 @@ fun MainView(
             onConfirmation = {
                 openCreateDialog = false
                 mainViewModel.addItem(it)
-                snackbarLauncher(it.label + " " + Einkaufszettel.res.getString(R.string.created))
+                snackbarLauncher(it.label + " " + ctx.getString(R.string.created))
             })
     }
 
@@ -145,13 +148,13 @@ fun MainView(
                 mainViewModel.deleteItem(itemForEditDialog!!)
                 itemForEditDialog = null
                 mainViewModel.addItem(it)
-                snackbarLauncher(it.label + " " + Einkaufszettel.res.getString(R.string.updated))
+                snackbarLauncher(it.label + " " + ctx.getString(R.string.updated))
             },
             onDeleteRequest = {
                 val deletedLabel = itemForEditDialog!!.label
                 mainViewModel.deleteItem(itemForEditDialog!!)
                 itemForEditDialog = null
-                snackbarLauncher(deletedLabel + " " + Einkaufszettel.res.getString(R.string.deleted))
+                snackbarLauncher(deletedLabel + " " + ctx.getString(R.string.deleted))
             })
     }
 }

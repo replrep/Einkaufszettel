@@ -18,18 +18,15 @@
 package de.cbrunzema.einkaufszettel
 
 import android.app.Application
-import android.content.res.Resources
 import java.io.File
 
 class Einkaufszettel : Application() {
     companion object {
-        lateinit var res: Resources
         lateinit var dataFile: File
     }
 
     override fun onCreate() {
         super.onCreate()
-        res = resources
         dataFile = File(applicationContext.dataDir, storageFileName)
     }
 }
