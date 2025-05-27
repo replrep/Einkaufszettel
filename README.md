@@ -12,7 +12,7 @@ registered persistently.
 You can get it by 
 
 * downloading the source right here and launch it via Android Studio 
-* installing [this apk](https://github.com/replrep/Einkaufszettel/blob/main/apk/Einkaufszettel-1.0.0.apk)
+* installing [this apk](https://github.com/replrep/Einkaufszettel/raw/refs/heads/main/apk/Einkaufszettel-1.0.0.apk)
 
 The main screen looks like this:
 
