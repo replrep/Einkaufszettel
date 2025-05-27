@@ -10,11 +10,11 @@ persistently.
 
 The main screen looks like this:
 
-![main screen](screenshot-main.png)
+![main screen](images/screenshot-main.png)
 
 If you long-tap an item the edit dialog shows up:
 
-![edit dialog](screenshot-edit.png)
+![edit dialog](images/screenshot-edit.png)
 
 ---
 Copyright (C) 2025 Claus Brunzema <mail@cbrunzema.de>
