@@ -5,10 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 
 class MainViewModel : ViewModel() {
+    val dataFileMutex = Mutex()
     val items = mutableStateOf<Set<ShoppingItem>>(setOf())
     val level = mutableStateOf(Level.A)
 
@@ -22,16 +25,18 @@ class MainViewModel : ViewModel() {
     fun load() {
         viewModelScope.launch {
             try {
-                if (!Einkaufszettel.dataFile.canRead()) {
-                    items.value = cleanupSorting(demoItemStore)
-                } else {
-                    items.value = cleanupSorting(
-                        Json.decodeFromString<Set<ShoppingItem>>(
-                            Einkaufszettel.dataFile.bufferedReader(Charsets.UTF_8).use(
-                                BufferedReader::readText
+                dataFileMutex.withLock {
+                    if (!Einkaufszettel.dataFile.canRead()) {
+                        items.value = cleanupSorting(demoItemStore)
+                    } else {
+                        items.value = cleanupSorting(
+                            Json.decodeFromString<Set<ShoppingItem>>(
+                                Einkaufszettel.dataFile.bufferedReader(Charsets.UTF_8).use(
+                                    BufferedReader::readText
+                                )
                             )
                         )
-                    )
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("Einkaufszettel I/O", "load error", e)
@@ -42,8 +47,10 @@ class MainViewModel : ViewModel() {
     fun save() {
         viewModelScope.launch {
             try {
-                Einkaufszettel.dataFile.bufferedWriter(Charsets.UTF_8).use {
-                    it.write(Json.encodeToString(items.value))
+                dataFileMutex.withLock {
+                    Einkaufszettel.dataFile.bufferedWriter(Charsets.UTF_8).use {
+                        it.write(Json.encodeToString(items.value))
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("Einkaufszettel I/O", "save error", e)
