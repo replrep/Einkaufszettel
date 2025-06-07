@@ -53,44 +53,10 @@ fun MainView(
             .fillMaxSize()
             .padding(horizontal = 10.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Column(
-                modifier = Modifier.weight(1.0f)
-            ) {
-                PrimaryTabRow(selectedTabIndex = level.ordinal, indicator = {
-                    TabRowDefaults.PrimaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(
-                            level.ordinal, matchContentSize = false
-                        ), width = Dp.Unspecified, color = MaterialTheme.colorScheme.onSurface
-                    )
-                }) {
-                    Level.entries.forEachIndexed { index, currentLevel ->
-                        Tab(
-                            selected = level == currentLevel,
-                            onClick = { mainViewModel.setLevel(currentLevel) },
-                            selectedContentColor = Color.Unspecified
-                        ) {
-                            Text(
-                                currentLevel.name, style = MaterialTheme.typography.titleLarge
-                            )
-                        }
-                    }
-                }
-            }
-            Column(
-                modifier = Modifier.weight(1.0f)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    IconButton(onClick = { openCreateDialog = true }) {
-                        Icon(Icons.Default.Add, stringResource(R.string.add))
-                    }
-                    IconButton(onClick = { openInfoDialog = true }) {
-                        Icon(Icons.Default.Info, stringResource(R.string.info))
-                    }
-                }
-            }
-        }
-
+        TopRow(
+            mainViewModel,
+            onCreateClick = { openCreateDialog = true },
+            onInfoClick = { openInfoDialog = true })
         UnselectedAndSelectedLists(mainViewModel, onLongClick = {
             itemForEditDialog = it
         })
@@ -135,6 +101,51 @@ fun MainView(
 }
 
 @Composable
+fun TopRow(
+    mainViewModel: MainViewModel, onCreateClick: () -> Unit, onInfoClick: () -> Unit
+) {
+    val level by mainViewModel.level
+
+    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(
+            modifier = Modifier.weight(1.0f)
+        ) {
+            PrimaryTabRow(selectedTabIndex = level.ordinal, indicator = {
+                TabRowDefaults.PrimaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(
+                        level.ordinal, matchContentSize = false
+                    ), width = Dp.Unspecified, color = MaterialTheme.colorScheme.onSurface
+                )
+            }) {
+                Level.entries.forEachIndexed { index, currentLevel ->
+                    Tab(
+                        selected = level == currentLevel,
+                        onClick = { mainViewModel.setLevel(currentLevel) },
+                        selectedContentColor = Color.Unspecified
+                    ) {
+                        Text(
+                            currentLevel.name, style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+        }
+        Column(
+            modifier = Modifier.weight(1.0f)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                IconButton(onClick = onCreateClick) {
+                    Icon(Icons.Default.Add, stringResource(R.string.add))
+                }
+                IconButton(onClick = onInfoClick) {
+                    Icon(Icons.Default.Info, stringResource(R.string.info))
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun UnselectedAndSelectedLists(
     mainViewModel: MainViewModel, onLongClick: (ShoppingItem) -> Unit
 ) {
@@ -162,9 +173,7 @@ fun UnselectedAndSelectedLists(
                 .verticalScroll(rightScrollState)
         ) {
             RightPanel(
-                items = items,
-                onClick = { mainViewModel.unselect(it) },
-                onLongClick = onLongClick
+                items = items, onClick = { mainViewModel.unselect(it) }, onLongClick = onLongClick
             )
         }
     }
