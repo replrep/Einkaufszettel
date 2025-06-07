@@ -12,15 +12,24 @@ class MainViewModel : ViewModel() {
     val items = mutableStateOf<Set<ShoppingItem>>(setOf())
     val level = mutableStateOf(Level.A)
 
+    fun cleanupSorting(items: Collection<ShoppingItem>): Set<ShoppingItem> {
+        return items.sortedWith(compareBy<ShoppingItem> { it.unselectedSortIndex }.thenBy { it.label })
+            .mapIndexed { i, item -> item.copy(unselectedSortIndex = (i + 1) * 10) }
+            .sortedWith(compareBy<ShoppingItem> { it.selectedSortIndex }.thenBy { it.label })
+            .mapIndexed { i, item -> item.copy(selectedSortIndex = (i + 1) * 10) }.toSet()
+    }
+
     fun load() {
         viewModelScope.launch {
             try {
                 if (!Einkaufszettel.dataFile.canRead()) {
-                    items.value = demoItemStore
+                    items.value = cleanupSorting(demoItemStore)
                 } else {
-                    items.value = Json.decodeFromString<Set<ShoppingItem>>(
-                        Einkaufszettel.dataFile.bufferedReader(Charsets.UTF_8).use(
-                            BufferedReader::readText
+                    items.value = cleanupSorting(
+                        Json.decodeFromString<Set<ShoppingItem>>(
+                            Einkaufszettel.dataFile.bufferedReader(Charsets.UTF_8).use(
+                                BufferedReader::readText
+                            )
                         )
                     )
                 }
@@ -59,10 +68,15 @@ class MainViewModel : ViewModel() {
     }
 
     fun addItem(item: ShoppingItem) {
-        items.value = items.value.filterNot { x -> x.label == item.label }.plus(item).toSet()
+        items.value =
+            cleanupSorting(items.value.filterNot { x -> x.label == item.label }.plus(item))
     }
 
     fun deleteItem(item: ShoppingItem) {
         items.value = items.value.minus(item)
+    }
+
+    fun replaceItem(oldItem: ShoppingItem, newItem: ShoppingItem) {
+        items.value = cleanupSorting(items.value.minus(oldItem).plus(newItem))
     }
 }

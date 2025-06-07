@@ -6,9 +6,12 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,6 +25,7 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -36,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import sh.calvin.reorderable.ReorderableColumn
 
 @Composable
 fun MainView(
@@ -65,11 +70,12 @@ fun MainView(
     if (openCreateDialog) {
         EditDialog(
             title = stringResource(R.string.create),
-            item = ShoppingItem("", level, false, false),
+            item = ShoppingItem(level),
             onDismissRequest = { openCreateDialog = false },
             onConfirmation = {
                 openCreateDialog = false
                 mainViewModel.addItem(it)
+                mainViewModel.setLevel(it.level)
                 snackbarLauncher(it.label + " " + ctx.getString(R.string.created))
             })
     }
@@ -89,6 +95,7 @@ fun MainView(
                 mainViewModel.deleteItem(itemForEditDialog!!)
                 itemForEditDialog = null
                 mainViewModel.addItem(it)
+                mainViewModel.setLevel(it.level)
                 snackbarLauncher(it.label + " " + ctx.getString(R.string.updated))
             },
             onDeleteRequest = {
@@ -154,77 +161,117 @@ fun UnselectedAndSelectedLists(
     val items by mainViewModel.items
     val level by mainViewModel.level
 
+    val unselectedList = remember(items, level) {
+        items.filter { !it.selected && it.level == level }.sortedBy { it.unselectedSortIndex }
+    }
+    val selectedList = remember(items) {
+        items.filter { it.selected }.sortedBy { it.selectedSortIndex }
+    }
+
     Row {
-        Column(
+        ReorderableColumn(
+            onSettle = { fromIndex, toIndex ->
+                val fromItem = unselectedList[fromIndex]
+                val toItem = unselectedList[toIndex]
+                if (toIndex == 0) {
+                    mainViewModel.replaceItem(fromItem, fromItem.copy(unselectedSortIndex = 0))
+                } else if (toIndex == unselectedList.size - 1) {
+                    mainViewModel.replaceItem(
+                        fromItem, fromItem.copy(unselectedSortIndex = Int.MAX_VALUE)
+                    )
+                } else if (toIndex == fromIndex + 1) {
+                    mainViewModel.replaceItem(
+                        fromItem,
+                        fromItem.copy(unselectedSortIndex = toItem.unselectedSortIndex + 1)
+                    )
+                } else {
+                    mainViewModel.replaceItem(
+                        fromItem,
+                        fromItem.copy(unselectedSortIndex = toItem.unselectedSortIndex - 1)
+                    )
+                }
+            },
+            list = unselectedList,
             modifier = Modifier
                 .weight(1.0f)
                 .verticalScroll(leftScrollState)
-        ) {
-            LeftPanel(
-                items = items,
-                level = level,
-                onClick = { mainViewModel.select(it) },
-                onLongClick = onLongClick
-            )
+        ) { _, item, _ ->
+            key(item.label) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        item.label,
+                        style = MaterialTheme.typography.titleLarge,
+                        lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
+                        modifier = Modifier.combinedClickable(
+                            onClick = { mainViewModel.select(item) },
+                            onLongClick = { onLongClick(item) })
+                    )
+                    Spacer(Modifier.weight(1.0f))
+                    TextButton(
+                        modifier = Modifier
+                            .draggableHandle()
+                            .requiredWidth(32.dp), onClick = {}) {
+                        Text("\u2a75")
+                    }
+                }
+            }
         }
-        Column(
+        Spacer(Modifier.width(8.dp))
+        ReorderableColumn(
+            onSettle = { fromIndex, toIndex ->
+                val fromItem = selectedList[fromIndex]
+                val toItem = selectedList[toIndex]
+                if (toIndex == 0) {
+                    mainViewModel.replaceItem(fromItem, fromItem.copy(selectedSortIndex = 0))
+                } else if (toIndex == selectedList.size - 1) {
+                    mainViewModel.replaceItem(
+                        fromItem, fromItem.copy(selectedSortIndex = Int.MAX_VALUE)
+                    )
+                } else if (toIndex == fromIndex + 1) {
+                    mainViewModel.replaceItem(
+                        fromItem, fromItem.copy(selectedSortIndex = toItem.selectedSortIndex + 1)
+                    )
+                } else {
+                    mainViewModel.replaceItem(
+                        fromItem, fromItem.copy(selectedSortIndex = toItem.selectedSortIndex - 1)
+                    )
+                }
+            },
+            list = selectedList,
             modifier = Modifier
                 .weight(1.0f)
                 .verticalScroll(rightScrollState)
-        ) {
-            RightPanel(
-                items = items, onClick = { mainViewModel.unselect(it) }, onLongClick = onLongClick
-            )
-        }
-    }
-}
-
-@Composable
-fun LeftPanel(
-    items: Set<ShoppingItem>,
-    level: Level,
-    onClick: (ShoppingItem) -> Unit,
-    onLongClick: (ShoppingItem) -> Unit
-) {
-    val cachedItems = remember(items, level) {
-        items.filter { !it.selected && it.level == level }.sortedBy { it.label }
-    }
-
-    for (item in cachedItems) {
-        key(item.label) {
-            Text(
-                item.label,
-                style = MaterialTheme.typography.titleLarge,
-                lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
-                modifier = Modifier.combinedClickable(
-                    onClick = { onClick(item) },
-                    onLongClick = { onLongClick(item) })
-            )
-        }
-    }
-}
-
-@Composable
-fun RightPanel(
-    items: Set<ShoppingItem>, onClick: (ShoppingItem) -> Unit, onLongClick: (ShoppingItem) -> Unit
-) {
-    val cachedItems = remember(items) { items.filter { it.selected }.sortedBy { it.label } }
-
-    for (item in cachedItems) {
-        key(item.label) {
-            Text(
-                item.label,
-                style = MaterialTheme.typography.titleLarge,
-                lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
-                fontStyle = if (item.singleUse) {
-                    FontStyle.Italic
-                } else {
-                    FontStyle.Normal
-                },
-                modifier = Modifier.combinedClickable(
-                    onClick = { onClick(item) },
-                    onLongClick = { onLongClick(item) })
-            )
+        ) { _, item, _ ->
+            key(item.label) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        item.label,
+                        style = MaterialTheme.typography.titleLarge,
+                        lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
+                        fontStyle = if (item.singleUse) {
+                            FontStyle.Italic
+                        } else {
+                            FontStyle.Normal
+                        },
+                        modifier = Modifier.combinedClickable(
+                            onClick = {
+                            mainViewModel.unselect(item)
+                        },
+                            onLongClick = { onLongClick(item) })
+                    )
+                    Spacer(Modifier.weight(1.0f))
+                    TextButton(
+                        modifier = Modifier
+                            .draggableHandle()
+                            .requiredWidth(32.dp), onClick = {},
+                    ) {
+                        Text("\u2a75")
+                    }
+                }
+            }
         }
     }
 }

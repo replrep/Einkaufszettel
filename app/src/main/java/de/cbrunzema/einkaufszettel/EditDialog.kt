@@ -62,7 +62,13 @@ fun EditDialog(
                     label = label.trim(),
                     level = level,
                     singleUse = singleUse,
-                    selected = singleUse // select single use items immediately
+                    selected = item.selected || singleUse, // select single use items immediately
+                    unselectedSortIndex = (if (item.level == level) {
+                        item.unselectedSortIndex
+                    } else {
+                        Int.MAX_VALUE
+                    }),
+                    selectedSortIndex = item.selectedSortIndex
                 )
             )
         }
