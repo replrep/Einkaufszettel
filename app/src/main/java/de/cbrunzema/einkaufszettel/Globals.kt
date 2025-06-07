@@ -10,10 +10,17 @@ enum class Level { A, B }
 
 @Serializable
 data class ShoppingItem(
-    val label: String, val level: Level, val singleUse: Boolean, val selected: Boolean
+    val level: Level,
+    val label: String = "",
+    val singleUse: Boolean = false,
+    val selected: Boolean = false,
+    val unselectedSortIndex: Int = 0,
+    val selectedSortIndex: Int = 0
 )
 
 val demoItemStore: Set<ShoppingItem> = setOf(
-    ShoppingItem("Demo item 1", Level.A, false, false),
-    ShoppingItem("Demo item 2", Level.A, false, false)
+    ShoppingItem( Level.A,"Demo item 1",),
+    ShoppingItem( Level.A,"Demo item 2"),
+    ShoppingItem( Level.A,"Demo item 3"),
+    ShoppingItem( Level.A,"Demo item 4"),
 )
