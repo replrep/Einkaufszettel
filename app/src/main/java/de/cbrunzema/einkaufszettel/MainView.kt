@@ -42,10 +42,6 @@ fun MainView(
     mainViewModel: MainViewModel, modifier: Modifier, snackbarLauncher: (String) -> Unit
 ) {
     val ctx = LocalContext.current
-
-    val leftScrollState = rememberScrollState()
-    val rightScrollState = rememberScrollState()
-    val items by mainViewModel.items
     val level by mainViewModel.level
 
     var openCreateDialog by remember { mutableStateOf(false) }
@@ -95,30 +91,9 @@ fun MainView(
             }
         }
 
-        Row {
-            Column(
-                modifier = Modifier
-                    .weight(1.0f)
-                    .verticalScroll(leftScrollState)
-            ) {
-                LeftPanel(
-                    items = items,
-                    level = level,
-                    onClick = { mainViewModel.select(it) },
-                    onLongClick = {
-                        itemForEditDialog = it
-                    })
-            }
-            Column(
-                modifier = Modifier
-                    .weight(1.0f)
-                    .verticalScroll(rightScrollState)
-            ) {
-                RightPanel(items = items, onClick = { mainViewModel.unselect(it) }, onLongClick = {
-                    itemForEditDialog = it
-                })
-            }
-        }
+        UnselectedAndSelectedLists(mainViewModel, onLongClick = {
+            itemForEditDialog = it
+        })
     }
 
     if (openCreateDialog) {
@@ -156,6 +131,42 @@ fun MainView(
                 itemForEditDialog = null
                 snackbarLauncher(deletedLabel + " " + ctx.getString(R.string.deleted))
             })
+    }
+}
+
+@Composable
+fun UnselectedAndSelectedLists(
+    mainViewModel: MainViewModel, onLongClick: (ShoppingItem) -> Unit
+) {
+    val leftScrollState = rememberScrollState()
+    val rightScrollState = rememberScrollState()
+    val items by mainViewModel.items
+    val level by mainViewModel.level
+
+    Row {
+        Column(
+            modifier = Modifier
+                .weight(1.0f)
+                .verticalScroll(leftScrollState)
+        ) {
+            LeftPanel(
+                items = items,
+                level = level,
+                onClick = { mainViewModel.select(it) },
+                onLongClick = onLongClick
+            )
+        }
+        Column(
+            modifier = Modifier
+                .weight(1.0f)
+                .verticalScroll(rightScrollState)
+        ) {
+            RightPanel(
+                items = items,
+                onClick = { mainViewModel.unselect(it) },
+                onLongClick = onLongClick
+            )
+        }
     }
 }
 
