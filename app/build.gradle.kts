@@ -5,6 +5,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+fun gitHash(): String {
+    return project.providers.exec {
+        commandLine = "git rev-parse --short=8 HEAD".split(" ")
+    }.standardOutput.asText.toString().trim()
+}
+
 android {
     namespace = "de.cbrunzema.einkaufszettel"
     compileSdk = 35
@@ -15,6 +21,8 @@ android {
         targetSdk = 35
         versionCode = 2
         versionName = "1.1.0-SNAPSHOT"
+
+        buildConfigField("String", "gitHash", "\"${gitHash()}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
