@@ -195,19 +195,21 @@ fun UnselectedAndSelectedLists(
             modifier = Modifier
                 .weight(1.0f)
                 .verticalScroll(leftScrollState)
-        ) { _, item, _ ->
-            key(item.label) {
+        ) { _, unselectedItem, _ ->
+            key(unselectedItem.label) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        item.label,
+                        unselectedItem.label,
                         style = MaterialTheme.typography.titleLarge,
                         lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
                         modifier = Modifier.combinedClickable(
-                            onClick = { mainViewModel.select(item) },
-                            onLongClick = { onLongClick(item) })
+                            onClick = {
+                            mainViewModel.select(unselectedItem)
+                        },
+                            onLongClick = { onLongClick(unselectedItem) })
                     )
                     Spacer(Modifier.weight(1.0f))
                     TextButton(
@@ -244,29 +246,28 @@ fun UnselectedAndSelectedLists(
             modifier = Modifier
                 .weight(1.0f)
                 .verticalScroll(rightScrollState)
-        ) { _, item, _ ->
-            key(item.label) {
+        ) { _, selectedItem, _ ->
+            key(selectedItem.label) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        item.label,
+                        selectedItem.label,
                         style = MaterialTheme.typography.titleLarge,
                         lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
-                        fontStyle = if (item.singleUse) {
+                        fontStyle = if (selectedItem.singleUse) {
                             FontStyle.Italic
                         } else {
                             FontStyle.Normal
                         },
-                        modifier = Modifier.combinedClickable(
-                            onClick = {
-                            mainViewModel.unselect(item)
-                        },
-                            onLongClick = { onLongClick(item) })
+                        modifier = Modifier.combinedClickable(onClick = {
+                            mainViewModel.unselect(selectedItem)
+                        }, onLongClick = { onLongClick(selectedItem) })
                     )
                     Spacer(Modifier.weight(1.0f))
                     TextButton(
                         modifier = Modifier
                             .draggableHandle()
-                            .requiredWidth(32.dp), onClick = {},
+                            .requiredWidth(32.dp),
+                        onClick = {},
                     ) {
                         Text("\u2a75")
                     }
