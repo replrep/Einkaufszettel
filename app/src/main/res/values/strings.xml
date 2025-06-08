@@ -20,4 +20,6 @@
     <string name="copyright">Copyright © 2025 Claus Brunzema</string>
     <string name="license">License: GPLv3 or later</string>
     <string name="drag">drag</string>
+    <string name="githash">Githash</string>
+    <string name="data_file">Data file</string>
 </resources>

@@ -2,7 +2,6 @@
 
 package de.cbrunzema.einkaufszettel
 
-import android.util.Log
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -54,6 +53,7 @@ fun MainView(
 
     var openCreateDialog by remember { mutableStateOf(false) }
     var openInfoDialog by remember { mutableStateOf(false) }
+    var openAboutDialog by remember { mutableStateOf(false) }
     var itemForEditDialog by remember { mutableStateOf<ShoppingItem?>(null) }
 
     Column(
@@ -64,7 +64,8 @@ fun MainView(
         TopRow(
             mainViewModel,
             onCreateClick = { openCreateDialog = true },
-            onInfoClick = { openInfoDialog = true })
+            onInfoClick = { openInfoDialog = true },
+            onAboutClick = { openAboutDialog = true })
         UnselectedAndSelectedLists(mainViewModel, onLongClick = {
             itemForEditDialog = it
         })
@@ -86,6 +87,12 @@ fun MainView(
     if (openInfoDialog) {
         InfoDialog(
             onDismissRequest = { openInfoDialog = false },
+        )
+    }
+
+    if (openAboutDialog) {
+        AboutDialog(
+            onDismissRequest = { openAboutDialog = false },
         )
     }
 
@@ -112,11 +119,13 @@ fun MainView(
 
 @Composable
 fun TopRow(
-    mainViewModel: MainViewModel, onCreateClick: () -> Unit, onInfoClick: () -> Unit
+    mainViewModel: MainViewModel,
+    onCreateClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onAboutClick: () -> Unit
 ) {
     val level by mainViewModel.level
     var menuExpanded by remember { mutableStateOf(false) }
-
 
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Column(
@@ -154,6 +163,12 @@ fun TopRow(
                 }
                 DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
                     DropdownMenuItem(
+                        text = { Text("Unselect all") }, // TODO
+                        onClick = {
+                            mainViewModel.unselectAll()
+                            menuExpanded = false
+                        })
+                    DropdownMenuItem(
                         text = { Text("Sort unselected") }, // TODO
                         onClick = {
                             mainViewModel.sortUnselected()
@@ -169,14 +184,14 @@ fun TopRow(
                     DropdownMenuItem(
                         text = { Text("Info") }, // TODO
                         onClick = {
-                            Log.e("AAA", "info")
+                            onInfoClick()
                             menuExpanded = false
                         })
                     DropdownMenuItem(
                         text = { Text("About") }, // TODO
                         onClick = {
                             menuExpanded = false
-                            onInfoClick()
+                            onAboutClick()
                         })
                 }
             }
