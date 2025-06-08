@@ -6,9 +6,9 @@ plugins {
 }
 
 fun gitHash(): String {
-    return project.providers.exec {
+    return providers.exec {
         commandLine = "git rev-parse --short=8 HEAD".split(" ")
-    }.standardOutput.asText.toString().trim()
+    }.standardOutput.asText.get().trim()
 }
 
 android {
