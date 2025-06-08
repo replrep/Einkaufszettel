@@ -16,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
@@ -212,7 +212,10 @@ fun UnselectedAndSelectedLists(
                     )
                     IconButton(
                         modifier = Modifier.draggableHandle(), onClick = {}) {
-                        Icon(Icons.Default.MoreVert, stringResource(R.string.drag))
+                        Icon(
+                            painterResource(R.drawable.drag_indicator_24px),
+                            stringResource(R.string.drag)
+                        )
                     }
                 }
             }
@@ -262,7 +265,10 @@ fun UnselectedAndSelectedLists(
                     )
                     IconButton(
                         modifier = Modifier.draggableHandle(), onClick = {}) {
-                        Icon(Icons.Default.MoreVert, stringResource(R.string.drag))
+                        Icon(
+                            painterResource(R.drawable.drag_indicator_24px),
+                            stringResource(R.string.drag)
+                        )
                     }
                 }
             }
