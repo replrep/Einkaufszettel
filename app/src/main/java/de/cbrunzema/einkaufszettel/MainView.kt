@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,7 +25,6 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -205,18 +204,15 @@ fun UnselectedAndSelectedLists(
                         unselectedItem.label,
                         style = MaterialTheme.typography.titleLarge,
                         lineHeight = MaterialTheme.typography.titleLarge.lineHeight.times(1.5),
-                        modifier = Modifier.combinedClickable(
-                            onClick = {
-                            mainViewModel.select(unselectedItem)
-                        },
-                            onLongClick = { onLongClick(unselectedItem) })
-                    )
-                    Spacer(Modifier.weight(1.0f))
-                    TextButton(
                         modifier = Modifier
-                            .draggableHandle()
-                            .requiredWidth(32.dp), onClick = {}) {
-                        Text("\u2a75")
+                            .weight(1.0f)
+                            .combinedClickable(onClick = {
+                                mainViewModel.select(unselectedItem)
+                            }, onLongClick = { onLongClick(unselectedItem) })
+                    )
+                    IconButton(
+                        modifier = Modifier.draggableHandle(), onClick = {}) {
+                        Icon(Icons.Default.MoreVert, stringResource(R.string.drag))
                     }
                 }
             }
@@ -258,18 +254,15 @@ fun UnselectedAndSelectedLists(
                         } else {
                             FontStyle.Normal
                         },
-                        modifier = Modifier.combinedClickable(onClick = {
-                            mainViewModel.unselect(selectedItem)
-                        }, onLongClick = { onLongClick(selectedItem) })
-                    )
-                    Spacer(Modifier.weight(1.0f))
-                    TextButton(
                         modifier = Modifier
-                            .draggableHandle()
-                            .requiredWidth(32.dp),
-                        onClick = {},
-                    ) {
-                        Text("\u2a75")
+                            .weight(1.0f)
+                            .combinedClickable(onClick = {
+                                mainViewModel.unselect(selectedItem)
+                            }, onLongClick = { onLongClick(selectedItem) })
+                    )
+                    IconButton(
+                        modifier = Modifier.draggableHandle(), onClick = {}) {
+                        Icon(Icons.Default.MoreVert, stringResource(R.string.drag))
                     }
                 }
             }
