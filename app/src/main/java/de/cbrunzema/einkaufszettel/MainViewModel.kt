@@ -94,4 +94,8 @@ class MainViewModel : ViewModel() {
     fun sortSelected() {
         items.value = renumberSortingIndices(items.value.map { it.copy(selectedSortIndex = 0) })
     }
+
+    fun unselectAll() {
+        items.value = items.value.map { it.copy(selected = false) }.toSet()
+    }
 }
