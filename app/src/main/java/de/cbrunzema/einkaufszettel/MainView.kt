@@ -159,40 +159,55 @@ fun TopRow(
                     Icon(Icons.Default.Add, stringResource(R.string.add))
                 }
                 IconButton(onClick = { menuExpanded = !menuExpanded }) {
-                    Icon(Icons.Default.MoreVert, "menu") //TODO
+                    Icon(Icons.Default.MoreVert, stringResource(R.string.menu))
                 }
                 DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
-                    DropdownMenuItem(
-                        text = { Text("Unselect all") }, // TODO
-                        onClick = {
-                            mainViewModel.unselectAll()
-                            menuExpanded = false
-                        })
-                    DropdownMenuItem(
-                        text = { Text("Sort unselected") }, // TODO
-                        onClick = {
-                            mainViewModel.sortUnselected()
-                            menuExpanded = false
-                        })
-                    DropdownMenuItem(
-                        text = { Text("Sort selected") }, // TODO
-                        onClick = {
-                            mainViewModel.sortSelected()
-                            menuExpanded = false
-                        })
+                    DropdownMenuItem(text = {
+                        Text(
+                            stringResource(R.string.unselect_all),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }, onClick = {
+                        mainViewModel.unselectAll()
+                        menuExpanded = false
+                    })
+                    DropdownMenuItem(text = {
+                        Text(
+                            stringResource(R.string.sort_unselected),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }, onClick = {
+                        mainViewModel.sortUnselected()
+                        menuExpanded = false
+                    })
+                    DropdownMenuItem(text = {
+                        Text(
+                            stringResource(R.string.sort_selected),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }, onClick = {
+                        mainViewModel.sortSelected()
+                        menuExpanded = false
+                    })
                     HorizontalDivider()
-                    DropdownMenuItem(
-                        text = { Text("Info") }, // TODO
-                        onClick = {
-                            onInfoClick()
-                            menuExpanded = false
-                        })
-                    DropdownMenuItem(
-                        text = { Text("About") }, // TODO
-                        onClick = {
-                            menuExpanded = false
-                            onAboutClick()
-                        })
+                    DropdownMenuItem(text = {
+                        Text(
+                            stringResource(R.string.info),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }, onClick = {
+                        onInfoClick()
+                        menuExpanded = false
+                    })
+                    DropdownMenuItem(text = {
+                        Text(
+                            stringResource(R.string.about),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }, onClick = {
+                        menuExpanded = false
+                        onAboutClick()
+                    })
                 }
             }
         }

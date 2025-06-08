@@ -57,7 +57,7 @@ fun InfoDialog(
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    "${stringResource(R.string.data_file)}: ${Einkaufszettel.dataFile.canonicalPath}",
+                    "${stringResource(R.string.datafile)}: ${Einkaufszettel.dataFile.canonicalPath}",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
