@@ -15,7 +15,7 @@ class MainViewModel : ViewModel() {
     val items = mutableStateOf<Set<ShoppingItem>>(setOf())
     val level = mutableStateOf(Level.A)
 
-    fun cleanupSorting(items: Collection<ShoppingItem>): Set<ShoppingItem> {
+    fun renumberSortingIndices(items: Collection<ShoppingItem>): Set<ShoppingItem> {
         return items.sortedWith(compareBy<ShoppingItem> { it.unselectedSortIndex }.thenBy { it.label })
             .mapIndexed { i, item -> item.copy(unselectedSortIndex = (i + 1) * 10) }
             .sortedWith(compareBy<ShoppingItem> { it.selectedSortIndex }.thenBy { it.label })
@@ -27,9 +27,9 @@ class MainViewModel : ViewModel() {
             try {
                 dataFileMutex.withLock {
                     if (!Einkaufszettel.dataFile.canRead()) {
-                        items.value = cleanupSorting(demoItemStore)
+                        items.value = renumberSortingIndices(demoItemStore)
                     } else {
-                        items.value = cleanupSorting(
+                        items.value = renumberSortingIndices(
                             Json.decodeFromString<Set<ShoppingItem>>(
                                 Einkaufszettel.dataFile.bufferedReader(Charsets.UTF_8).use(
                                     BufferedReader::readText
@@ -76,7 +76,7 @@ class MainViewModel : ViewModel() {
 
     fun addItem(item: ShoppingItem) {
         items.value =
-            cleanupSorting(items.value.filterNot { x -> x.label == item.label }.plus(item))
+            renumberSortingIndices(items.value.filterNot { x -> x.label == item.label }.plus(item))
     }
 
     fun deleteItem(item: ShoppingItem) {
@@ -84,6 +84,14 @@ class MainViewModel : ViewModel() {
     }
 
     fun replaceItem(oldItem: ShoppingItem, newItem: ShoppingItem) {
-        items.value = cleanupSorting(items.value.minus(oldItem).plus(newItem))
+        items.value = renumberSortingIndices(items.value.minus(oldItem).plus(newItem))
+    }
+
+    fun sortUnselected() {
+        items.value = renumberSortingIndices(items.value.map { it.copy(unselectedSortIndex = 0) })
+    }
+
+    fun sortSelected() {
+        items.value = renumberSortingIndices(items.value.map { it.copy(selectedSortIndex = 0) })
     }
 }
