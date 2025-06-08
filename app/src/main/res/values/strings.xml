@@ -21,5 +21,10 @@
     <string name="license">License: GPLv3 or later</string>
     <string name="drag">drag</string>
     <string name="githash">Githash</string>
-    <string name="data_file">Data file</string>
+    <string name="datafile">Datafile</string>
+    <string name="menu">Menu</string>
+    <string name="unselect_all">Unselect all</string>
+    <string name="sort_unselected">Sort unselected</string>
+    <string name="sort_selected">Sort selected</string>
+    <string name="about">About</string>
 </resources>
