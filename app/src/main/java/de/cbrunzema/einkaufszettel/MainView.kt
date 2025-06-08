@@ -2,6 +2,7 @@
 
 package de.cbrunzema.einkaufszettel
 
+import android.util.Log
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,8 +16,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -111,6 +115,8 @@ fun TopRow(
     mainViewModel: MainViewModel, onCreateClick: () -> Unit, onInfoClick: () -> Unit
 ) {
     val level by mainViewModel.level
+    var menuExpanded by remember { mutableStateOf(false) }
+
 
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Column(
@@ -143,8 +149,35 @@ fun TopRow(
                 IconButton(onClick = onCreateClick) {
                     Icon(Icons.Default.Add, stringResource(R.string.add))
                 }
-                IconButton(onClick = onInfoClick) {
-                    Icon(Icons.Default.Info, stringResource(R.string.info))
+                IconButton(onClick = { menuExpanded = !menuExpanded }) {
+                    Icon(Icons.Default.MoreVert, "menu") //TODO
+                }
+                DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
+                    DropdownMenuItem(
+                        text = { Text("Sort unselected") }, // TODO
+                        onClick = {
+                            mainViewModel.sortUnselected()
+                            menuExpanded = false
+                        })
+                    DropdownMenuItem(
+                        text = { Text("Sort selected") }, // TODO
+                        onClick = {
+                            mainViewModel.sortSelected()
+                            menuExpanded = false
+                        })
+                    HorizontalDivider()
+                    DropdownMenuItem(
+                        text = { Text("Info") }, // TODO
+                        onClick = {
+                            Log.e("AAA", "info")
+                            menuExpanded = false
+                        })
+                    DropdownMenuItem(
+                        text = { Text("About") }, // TODO
+                        onClick = {
+                            menuExpanded = false
+                            onInfoClick()
+                        })
                 }
             }
         }
