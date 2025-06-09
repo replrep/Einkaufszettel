@@ -55,7 +55,6 @@ fun MainView(
 
     var openCreateDialog by remember { mutableStateOf(false) }
     var openInfoDialog by remember { mutableStateOf(false) }
-    var openAboutDialog by remember { mutableStateOf(false) }
     var itemForEditDialog by remember { mutableStateOf<ShoppingItem?>(null) }
 
     Column(
@@ -66,8 +65,7 @@ fun MainView(
         TopRow(
             mainViewModel,
             onCreateClick = { openCreateDialog = true },
-            onInfoClick = { openInfoDialog = true },
-            onAboutClick = { openAboutDialog = true })
+            onInfoClick = { openInfoDialog = true })
         UnselectedAndSelectedLists(mainViewModel, onLongClick = {
             itemForEditDialog = it
         })
@@ -89,12 +87,6 @@ fun MainView(
     if (openInfoDialog) {
         InfoDialog(
             onDismissRequest = { openInfoDialog = false },
-        )
-    }
-
-    if (openAboutDialog) {
-        AboutDialog(
-            onDismissRequest = { openAboutDialog = false },
         )
     }
 
@@ -121,10 +113,7 @@ fun MainView(
 
 @Composable
 fun TopRow(
-    mainViewModel: MainViewModel,
-    onCreateClick: () -> Unit,
-    onInfoClick: () -> Unit,
-    onAboutClick: () -> Unit
+    mainViewModel: MainViewModel, onCreateClick: () -> Unit, onInfoClick: () -> Unit
 ) {
     val level by mainViewModel.level
     var menuExpanded by remember { mutableStateOf(false) }
@@ -200,15 +189,6 @@ fun TopRow(
                     }, onClick = {
                         onInfoClick()
                         menuExpanded = false
-                    })
-                    DropdownMenuItem(text = {
-                        Text(
-                            stringResource(R.string.about),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }, onClick = {
-                        menuExpanded = false
-                        onAboutClick()
                     })
                 }
             }

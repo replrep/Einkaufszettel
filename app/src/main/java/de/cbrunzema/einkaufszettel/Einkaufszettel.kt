@@ -18,6 +18,7 @@
 package de.cbrunzema.einkaufszettel
 
 import android.app.Application
+import android.util.Log
 import java.io.File
 
 class Einkaufszettel : Application() {
@@ -28,5 +29,6 @@ class Einkaufszettel : Application() {
     override fun onCreate() {
         super.onCreate()
         dataFile = File(applicationContext.dataDir, storageFileName)
+        Log.i("Einkaufszettel", "storage location: ${dataFile.canonicalPath}")
     }
 }
