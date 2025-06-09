@@ -17,8 +17,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
@@ -28,6 +35,19 @@ fun InfoDialog(
 ) {
     Dialog(
         onDismissRequest = { onDismissRequest() }) {
+        val sourceRepoLabel = stringResource(R.string.source_repo)
+        val homepageLink = remember {
+            buildAnnotatedString {
+                withLink(link = LinkAnnotation.Url(sourceRepoUrl)) {
+                    append(sourceRepoLabel)
+                    addStyle(
+                        style = SpanStyle(
+                            color = Color.Blue, textDecoration = TextDecoration.Underline
+                        ), start = 0, end = sourceRepoLabel.length
+                    )
+                }
+            }
+        }
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
@@ -43,22 +63,48 @@ fun InfoDialog(
                 }
             }
             HorizontalDivider()
-            Column(modifier = Modifier.padding(16.dp)) {
+            Spacer(Modifier.height(8.dp))
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        stringResource(R.string.info), style = MaterialTheme.typography.titleLarge
+                        stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.titleLarge
                     )
                 }
                 Spacer(Modifier.height(8.dp))
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        "${stringResource(R.string.version)}: ${BuildConfig.VERSION_NAME}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        "${stringResource(R.string.githash)}: ${BuildConfig.gitHash}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Row {
+                        Text(
+                            stringResource(R.string.check_out_the),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Text(
+                            homepageLink, style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+            HorizontalDivider()
+            Spacer(Modifier.height(8.dp))
+            Column(modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp)) {
                 Text(
-                    "${stringResource(R.string.githash)}: ${BuildConfig.gitHash}",
-                    style = MaterialTheme.typography.bodyLarge
+                    stringResource(R.string.copyright), style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    "${stringResource(R.string.datafile)}: ${Einkaufszettel.dataFile.canonicalPath}",
-                    style = MaterialTheme.typography.bodyLarge
+                    stringResource(R.string.license), style = MaterialTheme.typography.bodyLarge
                 )
             }
         }
