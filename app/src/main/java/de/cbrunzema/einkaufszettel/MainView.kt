@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
@@ -274,9 +276,14 @@ fun UnselectedAndSelectedLists(
                             }, onLongClick = { onLongClick(unselectedItem) })
                     )
                     IconButton(
-                        modifier = Modifier.draggableHandle(), onClick = {}) {
+                        modifier = Modifier
+                            .draggableHandle()
+                            .requiredWidth(12.dp),
+                        onClick = {},
+                        colors = IconButtonDefaults.outlinedIconButtonColors()
+                    ) {
                         Icon(
-                            painterResource(R.drawable.drag_indicator_24px),
+                            painterResource(R.drawable.drag_indicator12),
                             stringResource(R.string.drag)
                         )
                     }
@@ -327,9 +334,11 @@ fun UnselectedAndSelectedLists(
                             }, onLongClick = { onLongClick(selectedItem) })
                     )
                     IconButton(
-                        modifier = Modifier.draggableHandle(), onClick = {}) {
+                        modifier = Modifier
+                            .draggableHandle()
+                            .requiredWidth(12.dp), onClick = {}) {
                         Icon(
-                            painterResource(R.drawable.drag_indicator_24px),
+                            painterResource(R.drawable.drag_indicator12),
                             stringResource(R.string.drag)
                         )
                     }
