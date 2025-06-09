@@ -50,7 +50,7 @@ fun InfoDialog(
         }
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(4.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
