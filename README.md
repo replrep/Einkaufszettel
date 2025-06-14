@@ -11,10 +11,10 @@ registered persistently.
 
 You can get it by 
 
-* downloading the source right here and launch it via Android Studio 
-* installing [this apk](https://github.com/replrep/Einkaufszettel/raw/refs/heads/main/apk/Einkaufszettel-1.0.0.apk)
+* downloading all the sources right here and launch it via Android Studio 
+* installing the apk from the 'Releases' section
 
-The main screen looks like this:
+The main screen looks something like this:
 
 ![main screen](images/screenshot-main.png)
 
