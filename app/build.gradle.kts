@@ -19,8 +19,8 @@ android {
         applicationId = "de.cbrunzema.einkaufszettel"
         minSdk = 29
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.2.0-SNAPSHOT"
+        versionCode = 4
+        versionName = "1.1.1"
 
         buildConfigField("String", "gitHash", "\"${gitHash()}\"")
 
