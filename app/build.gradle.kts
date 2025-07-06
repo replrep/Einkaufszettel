@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -13,7 +15,7 @@ fun gitHash(): String {
 
 android {
     namespace = "de.cbrunzema.einkaufszettel"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "de.cbrunzema.einkaufszettel"
@@ -39,8 +41,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+      compilerOptions {
+        jvmTarget = JvmTarget.fromTarget("11")
+      }
     }
     buildFeatures {
         compose = true
