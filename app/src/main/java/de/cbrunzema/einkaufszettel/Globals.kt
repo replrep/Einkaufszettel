@@ -14,12 +14,12 @@ data class ShoppingItem(
     val label: String = "",
     val singleUse: Boolean = false,
     val selected: Boolean = false,
-    val unselectedSortIndex: Int = 0,
-    val selectedSortIndex: Int = 0
+    val unselectedSortIndex: Int = Int.MAX_VALUE,
+    val selectedSortIndex: Int = Int.MAX_VALUE
 )
 
 val demoItemStore: Set<ShoppingItem> = setOf(
-    ShoppingItem( Level.A,"Demo item 1",),
+    ShoppingItem( Level.A,"Demo item 1"),
     ShoppingItem( Level.A,"Demo item 2"),
     ShoppingItem( Level.A,"Demo item 3"),
     ShoppingItem( Level.A,"Demo item 4"),

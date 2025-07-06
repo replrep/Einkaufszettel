@@ -2,6 +2,7 @@
 
 package de.cbrunzema.einkaufszettel
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -51,11 +53,13 @@ fun MainView(
     mainViewModel: MainViewModel, modifier: Modifier, snackbarLauncher: (String) -> Unit
 ) {
     val ctx = LocalContext.current
+    val leftScrollState = rememberScrollState()
     val level by mainViewModel.level
 
     var openCreateDialog by remember { mutableStateOf(false) }
     var openInfoDialog by remember { mutableStateOf(false) }
     var itemForEditDialog by remember { mutableStateOf<ShoppingItem?>(null) }
+    var needsScrolldown by remember { mutableStateOf(false) }
 
     Column(
         modifier
@@ -66,7 +70,7 @@ fun MainView(
             mainViewModel,
             onCreateClick = { openCreateDialog = true },
             onInfoClick = { openInfoDialog = true })
-        UnselectedAndSelectedLists(mainViewModel, onLongClick = {
+        UnselectedAndSelectedLists(mainViewModel, leftScrollState, onLongClick = {
             itemForEditDialog = it
         })
     }
@@ -80,6 +84,7 @@ fun MainView(
                 openCreateDialog = false
                 mainViewModel.addItem(it)
                 mainViewModel.setLevel(it.level)
+                needsScrolldown = true
                 snackbarLauncher(it.label + " " + ctx.getString(R.string.created))
             })
     }
@@ -100,6 +105,9 @@ fun MainView(
                 itemForEditDialog = null
                 mainViewModel.addItem(it)
                 mainViewModel.setLevel(it.level)
+                if (!it.selected && it.unselectedSortIndex == Int.MAX_VALUE) {
+                    needsScrolldown = true
+                }
                 snackbarLauncher(it.label + " " + ctx.getString(R.string.updated))
             },
             onDeleteRequest = {
@@ -108,6 +116,13 @@ fun MainView(
                 itemForEditDialog = null
                 snackbarLauncher(deletedLabel + " " + ctx.getString(R.string.deleted))
             })
+    }
+
+    LaunchedEffect(needsScrolldown) {
+        if (needsScrolldown) {
+            needsScrolldown = false
+            leftScrollState.scrollTo(Int.MAX_VALUE)
+        }
     }
 }
 
@@ -198,9 +213,8 @@ fun TopRow(
 
 @Composable
 fun UnselectedAndSelectedLists(
-    mainViewModel: MainViewModel, onLongClick: (ShoppingItem) -> Unit
+    mainViewModel: MainViewModel, leftScrollState: ScrollState, onLongClick: (ShoppingItem) -> Unit
 ) {
-    val leftScrollState = rememberScrollState()
     val rightScrollState = rememberScrollState()
     val items by mainViewModel.items
     val level by mainViewModel.level
