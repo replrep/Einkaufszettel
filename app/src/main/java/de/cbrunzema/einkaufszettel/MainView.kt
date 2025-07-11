@@ -167,44 +167,26 @@ fun TopRow(
                 IconButton(onClick = { menuExpanded = !menuExpanded }) {
                     Icon(Icons.Default.MoreVert, stringResource(R.string.menu))
                 }
+
+                @Composable
+                fun makeMenuItem(resourceId: Int, onClick: () -> Unit) {
+                    DropdownMenuItem(text = {
+                        Text(
+                            stringResource(resourceId), style = MaterialTheme.typography.titleLarge
+                        )
+                    }, onClick = {
+                        menuExpanded = false
+                        onClick()
+                    })
+                }
                 DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
-                    DropdownMenuItem(text = {
-                        Text(
-                            stringResource(R.string.unselect_all),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }, onClick = {
+                    makeMenuItem(R.string.unselect_all) {
                         mainViewModel.unselectAll()
-                        menuExpanded = false
-                    })
-                    DropdownMenuItem(text = {
-                        Text(
-                            stringResource(R.string.sort_unselected),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }, onClick = {
-                        mainViewModel.sortUnselected()
-                        menuExpanded = false
-                    })
-                    DropdownMenuItem(text = {
-                        Text(
-                            stringResource(R.string.sort_selected),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }, onClick = {
-                        mainViewModel.sortSelected()
-                        menuExpanded = false
-                    })
+                    }
+                    makeMenuItem(R.string.sort_unselected) { mainViewModel.sortUnselected() }
+                    makeMenuItem(R.string.sort_selected) { mainViewModel.sortSelected() }
                     HorizontalDivider()
-                    DropdownMenuItem(text = {
-                        Text(
-                            stringResource(R.string.info),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }, onClick = {
-                        onInfoClick()
-                        menuExpanded = false
-                    })
+                    makeMenuItem(R.string.info) { onInfoClick() }
                 }
             }
         }
